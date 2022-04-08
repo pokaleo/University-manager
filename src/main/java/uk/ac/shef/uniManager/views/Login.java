@@ -4,9 +4,11 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.PageTitle;
@@ -14,6 +16,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.annotation.security.PermitAll;
@@ -26,8 +29,9 @@ public class Login extends VerticalLayout {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private LoginForm login = new LoginForm();
+    private SecurityService securityService;
 
-    public Login() {
+    public Login(@Autowired SecurityService securityService) {
 
         VerticalLayout layout = new VerticalLayout();
 
@@ -72,6 +76,18 @@ public class Login extends VerticalLayout {
             }
         }
         confirmButton.addClickListener(new MyClickListener());
+
+        // Logout button
+        this.securityService = securityService;
+
+        H1 logo = new H1("Vaadin CRM");
+        logo.addClassName("logo");
+        HorizontalLayout header;
+        if (securityService.getAuthenticatedUser() != null) {
+            Button logout = new Button("Logout", click ->
+                    securityService.logout());
+            add(logout);
+        }
 
         add(img, textField, passwordField, confirmButton);
 

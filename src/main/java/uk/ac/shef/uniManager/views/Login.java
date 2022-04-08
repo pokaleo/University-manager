@@ -16,8 +16,12 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+
 @PageTitle("Login Page")
-@Route(value = "login")
+@Route(value = "")
+@PermitAll
 public class Login extends VerticalLayout {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -60,13 +64,10 @@ public class Login extends VerticalLayout {
                     notification.setPosition(Notification.Position.MIDDLE);
                     notification.setDuration(2000);
                 }
-                String userType  = null;
-                boolean loginStatus = false;
                 System.out.println(userName+password);
                 String sql = "SELECT * FROM users WHERE userID = 2";
                 User user = jdbcTemplate.queryForObject(sql,
                         BeanPropertyRowMapper.newInstance(User.class));
-
                 System.out.println(user.getUsername());
             }
         }

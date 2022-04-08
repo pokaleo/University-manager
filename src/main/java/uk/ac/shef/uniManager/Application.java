@@ -6,6 +6,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * and some desktop browsers.
  *
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
 @Theme(value = "flowcrmtutorial")
 @PWA(name = "Flow CRM Tutorial", shortName = "Flow CRM Tutorial", offlineResources = {"images/logo.png"})
 @NpmPackage(value = "line-awesome", version = "1.3.0")

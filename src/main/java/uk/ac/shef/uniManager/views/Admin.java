@@ -3,9 +3,9 @@ package uk.ac.shef.uniManager.views;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,23 +16,24 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import uk.ac.shef.uniManager.utils.SecurityService;
+import uk.ac.shef.uniManager.utils.SecurityUtils;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
-@PageTitle("Login Page")
-@Route(value = "")
-@PermitAll
-public class Login extends VerticalLayout {
+@PageTitle("Admin Dashboard")
+@Route(value = "admin")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
+public class Admin extends VerticalLayout {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private LoginForm login = new LoginForm();
     private SecurityService securityService;
 
-    public Login(@Autowired SecurityService securityService) {
-
+    public Admin(@Autowired SecurityService securityService) {
         VerticalLayout layout = new VerticalLayout();
 
         Image img = new Image("images/login2.jpg", "login logo2");
@@ -90,6 +91,11 @@ public class Login extends VerticalLayout {
         }
 
         add(img, textField, passwordField, confirmButton);
+
+        // get user role
+        Label label = new Label(SecurityUtils.getUserType().toString());
+        Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
+        add(label, label2);
 
         setHeightFull();
         setAlignItems(Alignment.CENTER);

@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.security.config.annotation.authentication.builders.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import uk.ac.shef.uniManager.views.LoginView;
 import uk.ac.shef.uniManager.views.User;
 
@@ -27,7 +29,8 @@ public class WebSecurityConfig extends VaadinWebSecurityConfigurerAdapter {
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
-                .dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder())
+                .dataSource(dataSource)
+                .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("select username, password, 'true' as enabled from users where username=?")
                 .authoritiesByUsernameQuery("select username, usertype from users where username=?")
         ;
@@ -36,7 +39,6 @@ public class WebSecurityConfig extends VaadinWebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-
         setLoginView(http, LoginView.class);
     }
 }

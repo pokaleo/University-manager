@@ -4,6 +4,7 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
@@ -20,6 +21,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @PWA(name = "University Manager", shortName = "University Manager", offlineResources = {"images/logo.jpg"})
 @NpmPackage(value = "line-awesome", version = "1.3.0")
+@Theme("unimanager")
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator {
 
     public static void main(String[] args) {

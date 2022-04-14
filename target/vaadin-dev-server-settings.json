@@ -6,7 +6,7 @@
   "generatedFolder": "generated",
   "frontendBundleOutput": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/classes/META-INF/VAADIN/webapp",
   "addonFrontendFolder": "target/flow-frontend/",
-  "themeName": "",
+  "themeName": "unimanager",
   "clientServiceWorkerSource": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/sw.ts",
   "pwaEnabled": true,
   "offlinePath": "'.'"

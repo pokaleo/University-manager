@@ -1,8 +1,6 @@
-package com.example.application.views;
+package uk.ac.shef.uniManager.views;
 
 
-import com.example.application.views.about.AboutView;
-import com.example.application.views.helloworld.HelloWorldView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -87,7 +85,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Component createDrawerContent() {
-        H2 appName = new H2("My App");
+        H2 appName = new H2("University Manager");
         appName.addClassNames("app-name");
 
         com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
@@ -115,9 +113,9 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", "la la-columns", HelloWorldView.class), //
+                new MenuItemInfo("Manage Users", "la la-columns", Admin.class), //
 
-                new MenuItemInfo("About", "la la-file", AboutView.class), //
+                new MenuItemInfo("About", "la la-file", Login2.class), //
 
         };
     }

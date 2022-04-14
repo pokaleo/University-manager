@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.List;
 
 @PageTitle("Admin Dashboard")
-@Route(value = "/admin")
+@Route(value = "/admin", layout = MainLayout.class)
 @RolesAllowed("ROLE_admin")
 public class Admin extends VerticalLayout {
     @Autowired
@@ -69,59 +69,59 @@ public class Admin extends VerticalLayout {
         add(grid);
 
 
-        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        for (Object obj:
-             authorities) {
-            System.out.println(obj.toString());
-        }
-        VaadinServletRequest request = VaadinServletRequest.getCurrent();
-        System.out.println(request.getUserPrincipal());
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        System.out.println("User has authorities: " + userDetails.getAuthorities());
-
-        Image img = new Image("images/login2.jpg", "login logo2");
-        img.setWidth("200px");
-
-        Button confirmButton = new Button("Confirm");
-
-        TextField textField = new TextField();
-        textField.setLabel("username");
-        textField.setRequiredIndicatorVisible(true);
-        textField.setErrorMessage("This field is required");
-
-        PasswordField passwordField = new PasswordField();
-        passwordField.setLabel("password");
-        passwordField.setRequiredIndicatorVisible(true);
-        passwordField.setErrorMessage("This field is required");
-
-        class MyClickListener implements ComponentEventListener<ClickEvent<Button>> {
-            int count = 0;
-            @Override
-            public void onComponentEvent(ClickEvent<Button> event) {
-                event.getSource().setText("You have clicked me " +
-                        (++count) + " times");
-                String userName = textField.getValue();
-                String password = passwordField.getValue();
-                if (StringUtil.isEmpty(userName)) {
-                    Notification notification = Notification.show("username cannot be empty");
-                    notification.setPosition(Notification.Position.MIDDLE);
-                    notification.setDuration(2000);
-                }
-                if (StringUtil.isEmpty(password)) {
-                    Notification notification = Notification.show("password cannot be empty");
-                    notification.setPosition(Notification.Position.MIDDLE);
-                    notification.setDuration(2000);
-                }
-                System.out.println(userName+password);
-                String sql = "SELECT * FROM users WHERE userID = 2";
-                UserView user = jdbcTemplate.queryForObject(sql,
-                        BeanPropertyRowMapper.newInstance(UserView.class));
-                System.out.println(user.getUsername());
-            }
-        }
-        confirmButton.addClickListener(new MyClickListener());
+//        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+//        for (Object obj:
+//             authorities) {
+//            System.out.println(obj.toString());
+//        }
+//        VaadinServletRequest request = VaadinServletRequest.getCurrent();
+//        System.out.println(request.getUserPrincipal());
+//        SecurityContext context = SecurityContextHolder.getContext();
+//        Authentication authentication = context.getAuthentication();
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        System.out.println("User has authorities: " + userDetails.getAuthorities());
+//
+//        Image img = new Image("images/login2.jpg", "login logo2");
+//        img.setWidth("200px");
+//
+//        Button confirmButton = new Button("Confirm");
+//
+//        TextField textField = new TextField();
+//        textField.setLabel("username");
+//        textField.setRequiredIndicatorVisible(true);
+//        textField.setErrorMessage("This field is required");
+//
+//        PasswordField passwordField = new PasswordField();
+//        passwordField.setLabel("password");
+//        passwordField.setRequiredIndicatorVisible(true);
+//        passwordField.setErrorMessage("This field is required");
+//
+//        class MyClickListener implements ComponentEventListener<ClickEvent<Button>> {
+//            int count = 0;
+//            @Override
+//            public void onComponentEvent(ClickEvent<Button> event) {
+//                event.getSource().setText("You have clicked me " +
+//                        (++count) + " times");
+//                String userName = textField.getValue();
+//                String password = passwordField.getValue();
+//                if (StringUtil.isEmpty(userName)) {
+//                    Notification notification = Notification.show("username cannot be empty");
+//                    notification.setPosition(Notification.Position.MIDDLE);
+//                    notification.setDuration(2000);
+//                }
+//                if (StringUtil.isEmpty(password)) {
+//                    Notification notification = Notification.show("password cannot be empty");
+//                    notification.setPosition(Notification.Position.MIDDLE);
+//                    notification.setDuration(2000);
+//                }
+//                System.out.println(userName+password);
+//                String sql = "SELECT * FROM users WHERE userID = 2";
+//                UserView user = jdbcTemplate.queryForObject(sql,
+//                        BeanPropertyRowMapper.newInstance(UserView.class));
+//                System.out.println(user.getUsername());
+//            }
+//        }
+//        confirmButton.addClickListener(new MyClickListener());
 
         // Logout button
         this.securityService = securityService;
@@ -135,16 +135,16 @@ public class Admin extends VerticalLayout {
             add(logout);
         }
 
-        add(img, textField, passwordField, confirmButton);
-
-        // get user role
-        Label label = new Label(SecurityUtils.getUserType().toString());
-        Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
-        add(label, label2,getToolbar());
-
-        setHeightFull();
-        setAlignItems(Alignment.CENTER);
-        setJustifyContentMode(JustifyContentMode.CENTER);
+//        add(img, textField, passwordField, confirmButton);
+//
+//        // get user role
+//        Label label = new Label(SecurityUtils.getUserType().toString());
+//        Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
+//        add(label, label2,getToolbar());
+//
+//        setHeightFull();
+//        setAlignItems(Alignment.CENTER);
+//        setJustifyContentMode(JustifyContentMode.CENTER);
     }
 
     private HorizontalLayout getToolbar() {

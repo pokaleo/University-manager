@@ -70,8 +70,8 @@ public class Login2 extends VerticalLayout {
                 }
                 System.out.println(userName+password);
                 String sql = "SELECT * FROM users WHERE userID = 2";
-                User user = jdbcTemplate.queryForObject(sql,
-                        BeanPropertyRowMapper.newInstance(User.class));
+                UserView user = jdbcTemplate.queryForObject(sql,
+                        BeanPropertyRowMapper.newInstance(UserView.class));
                 System.out.println(user.getUsername());
             }
         }

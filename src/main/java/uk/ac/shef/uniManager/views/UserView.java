@@ -1,6 +1,6 @@
 package uk.ac.shef.uniManager.views;
 
-public class User {
+public class UserView {
     private String type;
     private String username;
     private String password;

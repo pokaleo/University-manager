@@ -3,6 +3,8 @@ package uk.ac.shef.uniManager.views;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -11,38 +13,27 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinServlet;
 import com.vaadin.flow.server.VaadinServletRequest;
-import com.vaadin.flow.spring.security.VaadinSavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import uk.ac.shef.uniManager.DAO.UserDAO;
+import uk.ac.shef.uniManager.model.User;
 import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
+import java.util.List;
 
 @PageTitle("Admin Dashboard")
 @Route(value = "/admin")
@@ -52,9 +43,32 @@ public class Admin extends VerticalLayout {
     private JdbcTemplate jdbcTemplate;
     private LoginForm login = new LoginForm();
     private SecurityService securityService;
+    TextField filterText = new TextField();
 
     public Admin(@Autowired SecurityService securityService) {
         VerticalLayout layout = new VerticalLayout();
+
+        Grid<User> grid = new Grid<>();
+        Editor<User> editor = grid.getEditor();
+        UserDAO userDao = new UserDAO();
+        List<User> userList = userDao.getUserList(new User());
+        grid.setItems(userList);
+        grid.addColumn(User::getUserID).setHeader("UserID");
+        grid.addColumn(User::getUsername).setHeader("Username");
+        grid.addColumn(User::getType).setHeader("UserType");
+        grid.addComponentColumn(user -> {
+            Button editButton = new Button("Edit");
+            editButton.addClickListener(e -> {
+                if (editor.isOpen())
+                    editor.cancel();
+                grid.getEditor().editItem(user);
+            });
+            return editButton;
+        }).setWidth("150px").setFlexGrow(0);
+
+        add(grid);
+
+
         Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         for (Object obj:
              authorities) {
@@ -102,8 +116,8 @@ public class Admin extends VerticalLayout {
                 }
                 System.out.println(userName+password);
                 String sql = "SELECT * FROM users WHERE userID = 2";
-                User user = jdbcTemplate.queryForObject(sql,
-                        BeanPropertyRowMapper.newInstance(User.class));
+                UserView user = jdbcTemplate.queryForObject(sql,
+                        BeanPropertyRowMapper.newInstance(UserView.class));
                 System.out.println(user.getUsername());
             }
         }
@@ -126,11 +140,23 @@ public class Admin extends VerticalLayout {
         // get user role
         Label label = new Label(SecurityUtils.getUserType().toString());
         Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
-        add(label, label2);
+        add(label, label2,getToolbar());
 
         setHeightFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
+    }
+
+    private HorizontalLayout getToolbar() {
+        filterText.setPlaceholder("Filter by name...");
+        filterText.setClearButtonVisible(true);
+        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+
+        Button addContactButton = new Button("Add contact");
+
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
+        toolbar.addClassName("toolbar");
+        return toolbar;
     }
 
 }

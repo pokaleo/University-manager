@@ -1,0 +1,13 @@
+{
+  "frontendFolder": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/./frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/frontend",
+  "staticOutput": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "frontendBundleOutput": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/classes/META-INF/VAADIN/webapp",
+  "addonFrontendFolder": "target/flow-frontend/",
+  "themeName": "",
+  "clientServiceWorkerSource": "/Users/liyao/Desktop/Dissertation/flow-crm-tutorial/University manager/target/sw.ts",
+  "pwaEnabled": true,
+  "offlinePath": "'.'"
+}

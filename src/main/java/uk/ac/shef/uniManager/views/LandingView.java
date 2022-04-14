@@ -47,7 +47,7 @@ public class LandingView extends HorizontalLayout implements BeforeEnterObserver
         if (SecurityUtils.isUserLoggedIn()){
             // get user role
             String userType = SecurityUtils.getUserType();
-            if("ADMIN".equals(userType)){
+            if("ROLE_admin".equals(userType)){
                 Notification notification = Notification.show("Login successfully! Your role is admin.");
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.setPosition(Notification.Position.TOP_CENTER);

@@ -13,20 +13,40 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinServlet;
+import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.spring.security.VaadinSavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
 
 @PageTitle("Admin Dashboard")
-@Route(value = "admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@Route(value = "/admin")
+@RolesAllowed("ROLE_admin")
 public class Admin extends VerticalLayout {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -35,6 +55,17 @@ public class Admin extends VerticalLayout {
 
     public Admin(@Autowired SecurityService securityService) {
         VerticalLayout layout = new VerticalLayout();
+        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        for (Object obj:
+             authorities) {
+            System.out.println(obj.toString());
+        }
+        VaadinServletRequest request = VaadinServletRequest.getCurrent();
+        System.out.println(request.getUserPrincipal());
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println("User has authorities: " + userDetails.getAuthorities());
 
         Image img = new Image("images/login2.jpg", "login logo2");
         img.setWidth("200px");

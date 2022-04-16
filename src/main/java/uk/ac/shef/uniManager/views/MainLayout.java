@@ -4,6 +4,7 @@ package uk.ac.shef.uniManager.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Footer;
@@ -14,8 +15,10 @@ import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+import uk.ac.shef.uniManager.utils.SecurityService;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -113,7 +116,7 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Manage Users", "la la-columns", Admin.class), //
+                new MenuItemInfo("Manage Users", "la la-columns", ViewUsers.class), //
 
                 new MenuItemInfo("About", "la la-file", Login2.class), //
 
@@ -123,6 +126,17 @@ public class MainLayout extends AppLayout {
     private Footer createFooter() {
         Footer layout = new Footer();
         layout.addClassNames("footer");
+        // Logout button
+
+        H1 logo = new H1("Vaadin CRM");
+        logo.addClassName("logo");
+        HorizontalLayout header;
+        SecurityService securityService = new SecurityService();
+        if (securityService.getAuthenticatedUser() != null) {
+            Button logout = new Button("Logout", click ->
+                    securityService.logout());
+            layout.add(logout);
+        }
 
         return layout;
     }

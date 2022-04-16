@@ -19,7 +19,7 @@ import java.util.Collections;
 public class ListView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
     TextField filterText = new TextField();
-    ContactForm form;
+
     CrmService service;
 
     public ListView(CrmService service) {
@@ -29,22 +29,12 @@ public class ListView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-        add(getToolbar(), getContent());
+        add(getToolbar());
         updateList();
     }
 
-    private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form);
-        content.setFlexGrow(2, grid);
-        content.setFlexGrow(1, form);
-        content.addClassNames("content");
-        content.setSizeFull();
-        return content;
-    }
 
     private void configureForm() {
-        form = new ContactForm(Collections.emptyList(), Collections.emptyList());
-        form.setWidth("25em");
     }
 
     private void configureGrid() {

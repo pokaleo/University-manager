@@ -51,7 +51,7 @@ public class LandingView extends HorizontalLayout implements BeforeEnterObserver
                 Notification notification = Notification.show("Login successfully! Your role is admin.");
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.setPosition(Notification.Position.TOP_CENTER);
-                event.forwardTo(Admin.class);
+                event.forwardTo(ViewUsers.class);
             }
         }
     }

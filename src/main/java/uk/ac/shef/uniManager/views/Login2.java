@@ -17,6 +17,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import uk.ac.shef.uniManager.model.User;
 import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
 import uk.ac.shef.uniManager.utils.StringUtil;
@@ -70,8 +71,8 @@ public class Login2 extends VerticalLayout {
                 }
                 System.out.println(userName+password);
                 String sql = "SELECT * FROM users WHERE userID = 2";
-                UserView user = jdbcTemplate.queryForObject(sql,
-                        BeanPropertyRowMapper.newInstance(UserView.class));
+                User user = jdbcTemplate.queryForObject(sql,
+                        BeanPropertyRowMapper.newInstance(User.class));
                 System.out.println(user.getUsername());
             }
         }

@@ -4,26 +4,26 @@ package uk.ac.shef.uniManager.DAO;
 
 import uk.ac.shef.uniManager.model.Degree;
 import uk.ac.shef.uniManager.model.User;
+import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DegDAO extends BaseDAO{
     public boolean addDeg(Degree degree){
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
         String sql = "insert into Degrees values(?,?,?)";
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, degree.getDegId());
             preparedStatement.setString(2, degree.getDegName());
             preparedStatement.setString(3, degree.getLeadDep());
             if(preparedStatement.executeUpdate() > 0)return true;
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -32,28 +32,27 @@ public class DegDAO extends BaseDAO{
 
 
 
-    public List<User> getDepList(User user) {
+    public List<Degree> getDegList(Degree degree) {
         // TODO Auto-generated method stub
-        List<User> retList = new ArrayList<User>();
-        StringBuffer sqlString = new StringBuffer("select * from users");
-        if(!StringUtil.isEmpty(user.getUsername())){
-            sqlString.append(" where name like '%"+user.getUsername()+"%'");
+        List<Degree> retList = new ArrayList<Degree>();
+        StringBuffer sqlString = new StringBuffer("select * from degrees");
+        if(!StringUtil.isEmpty(degree.getDegId())){
+            sqlString.append(" where degId like '%"+degree.getDegId()+"%'");
         }
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sqlString.toString());
             ResultSet executeQuery = preparedStatement.executeQuery();
             while(executeQuery.next()){
-                User t = new User();
-                t.setUsername(executeQuery.getString("username"));
-                t.setSalt(executeQuery.getString("salt"));
-                t.setType(executeQuery.getString("userType"));
-                t.setPassword(executeQuery.getString("password"));
+                Degree degree1 = new Degree();
+                degree1.setDegId(executeQuery.getString("degId"));
+                degree1.setDegName(executeQuery.getString("degName"));
+                degree1.setLeadDep(executeQuery.getString("leadDep"));
                 /**
                  * here can add the username and password
                  */
-                retList.add(t);
-                conn.close();
+                retList.add(degree1);
             }
+            conn.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -62,47 +61,53 @@ public class DegDAO extends BaseDAO{
 
     }
     public boolean delete(String degId){
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
         String sql = "delete from degrees where degId=?";
         String sql2 = "delete from DepDeg where degId=?";
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            PreparedStatement ps = conn.prepareStatement(sql2);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql2);
             preparedStatement.setString(1, degId);
             ps.setString(1, degId);
             ps.executeUpdate();
             if(preparedStatement.executeUpdate() > 0){
                 return true;
             }
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean update(String leadDep, String degId){
-        String sql = "update degrees set leadDep=? where degId=?";
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
+    public boolean update(String leadDep, String degId){
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
+        String sql = "update degrees set leadDep=? where degId=?;";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, leadDep);
             preparedStatement.setString(2, degId);
             if(preparedStatement.executeUpdate() > 0){
                 return true;
             }
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
     public boolean linkDepDeg(String depId, String degId){
-        String sql = "update degrees set leadDep=? where degId=?;";
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
+        String sql = "insert into DepDeg values(?,?)";
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, depId);
-            preparedStatement.setString(2, degId);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, degId);
+            preparedStatement.setString(2, depId);
             if(preparedStatement.executeUpdate() > 0)return true;
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -266,7 +266,7 @@ public class ViewUsers extends Div {
         });
         userType2.setItems(userTypes);
 
-        passwordField = new PasswordField();
+        passwordField = new PasswordField("Password");
         com.vaadin.flow.component.Component[] fields = new Component[]{username, userType2, passwordField};
 
         formLayout.add(fields);

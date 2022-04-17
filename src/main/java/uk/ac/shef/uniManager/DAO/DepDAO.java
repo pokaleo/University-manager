@@ -3,13 +3,11 @@ package uk.ac.shef.uniManager.DAO;
 
 
 import uk.ac.shef.uniManager.model.Department;
+import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,11 +57,13 @@ public class DepDAO extends BaseDAO{
 
     }
     public boolean delete(String depId){
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
         String sql = "delete from departments where depId=?";
         String sql2 = "delete from DepDeg where depId=?";
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            PreparedStatement ps2 = con.prepareStatement(sql2);
             preparedStatement.setString(1, depId);
             ps2.setString(1,depId);
             ps2.executeUpdate();

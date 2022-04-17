@@ -118,6 +118,8 @@ public class MainLayout extends AppLayout {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo("Manage Users", "la la-columns", ViewUsers.class), //
 
+                new MenuItemInfo("Manage Departments", "la la-columns", ViewDepartments.class),
+
                 new MenuItemInfo("About", "la la-file", Login2.class), //
 
         };

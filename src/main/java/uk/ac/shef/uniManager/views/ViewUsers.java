@@ -44,8 +44,6 @@ public class ViewUsers extends Div {
     TextField filterText = new TextField();
     private Grid<User> grid = new Grid<>();
     private Editor<User> editor = grid.getEditor();
-    private Button cancelButton = new Button("Cancel");
-    private Button saveButton = new Button("Save");
     private Button addButton = new Button("Add");
     private SplitLayout splitLayout;
     private TextField userID;

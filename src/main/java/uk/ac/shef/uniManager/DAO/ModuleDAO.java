@@ -1,12 +1,14 @@
 package uk.ac.shef.uniManager.DAO;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import uk.ac.shef.uniManager.model.Department;
 import uk.ac.shef.uniManager.model.Module;
+import uk.ac.shef.uniManager.utils.DbConn;
+import uk.ac.shef.uniManager.utils.StringUtil;
 
 public class ModuleDAO extends BaseDAO {
     public boolean addMod(Module module){
@@ -43,13 +45,15 @@ public class ModuleDAO extends BaseDAO {
         return model;
     }
     public boolean delete(String moduleId){
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
         String sql = "delete from modules where moduleId=?";
         String sql2 = "delete from DegMod where module=?";
         String sql3 = "delete from StudentMod where module=?";
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            PreparedStatement ps = conn.prepareStatement(sql2);
-            PreparedStatement ps2 = conn.prepareStatement(sql3);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql2);
+            PreparedStatement ps2 = con.prepareStatement(sql3);
             preparedStatement.setString(1, moduleId);
             ps.setString(1, moduleId);
             ps2.setString(1, moduleId);
@@ -58,7 +62,7 @@ public class ModuleDAO extends BaseDAO {
             if(preparedStatement.executeUpdate() > 0){
                 return true;
             }
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,14 +71,16 @@ public class ModuleDAO extends BaseDAO {
 
     public boolean linkDegMod(String depId, String moduleId, String level, int type){
         String sql = "insert into DegMod values(?,?,?,?)";
+        DbConn dbConn = new DbConn();
+        Connection con = dbConn.getCon();
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, depId);
             preparedStatement.setString(2, moduleId);
             preparedStatement.setString(3, level);
             preparedStatement.setInt(4, type);
             if(preparedStatement.executeUpdate() > 0)return true;
-            conn.close();
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,6 +105,33 @@ public class ModuleDAO extends BaseDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Module> getModuleList(Module module) {
+        List<Module> retList = new ArrayList<Module>();
+        StringBuffer sqlString = new StringBuffer("select * from modules");
+        if(!StringUtil.isEmpty(module.getModuleId())){
+            sqlString.append(" where moduleId like '%"+module.getModuleId()+"%'");
+        }
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlString.toString());
+            ResultSet executeQuery = preparedStatement.executeQuery();
+            while(executeQuery.next()){
+                Module module1 = new Module();
+                module1.setModuleId(executeQuery.getString("moduleId"));
+                module1.setModuleName(executeQuery.getString("moduleName"));
+                module1.setTaughtSem(executeQuery.getString("taughtSem"));
+                /**
+                 * here can add the username and password
+                 */
+                retList.add(module1);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return retList;
+
     }
 
 }

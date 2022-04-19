@@ -23,48 +23,49 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import uk.ac.shef.uniManager.DAO.DegDAO;
-import uk.ac.shef.uniManager.DAO.DepDAO;
+import uk.ac.shef.uniManager.DAO.ModuleDAO;
 import uk.ac.shef.uniManager.model.Degree;
-import uk.ac.shef.uniManager.model.Department;
+import uk.ac.shef.uniManager.model.Module;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Admin Dashboard")
-@Route(value = "/viewDegrees", layout = MainLayout.class)
+@Route(value = "/viewModules", layout = MainLayout.class)
 @RolesAllowed("ROLE_admin")
-public class ViewDegrees extends Div {
-    TextField filterText = new TextField();
-    private Grid<Degree> grid = new Grid<>();
-    private Editor<Degree> editor = grid.getEditor();
+public class ViewModules extends Div {
+    private Grid<Module> grid = new Grid<>();
+    private Editor<Module> editor = grid.getEditor();
     private Button addButton = new Button("Add");
     private Button linkButton = new Button("Confirm");
     private SplitLayout splitLayout;
-    private TextField degID;
-    private TextField degName;
-    private ComboBox<String> degBox;
-    private ComboBox<String> leadDep;
-    private ComboBox<String> leadDep2;
-    private ComboBox<String> depBox;
-    private ArrayList<String> leadDepList;
+    private TextField moduleID;
+    private TextField moduleName;
+    private ComboBox<String> taughtSem = new ComboBox<String>("Taught Semester");
+    private ComboBox<String> linkedDeg = new ComboBox<String>("Degree Code");
+    private ComboBox<String> linkedModule;
+    private ComboBox<String> levelOfStudy;
+    private ComboBox<String> moduleType;
+    private ArrayList<String> degList;
+    private List<Module> moduleList;
 
-    public ViewDegrees() {
+    public ViewModules() {
         splitLayout = new SplitLayout();
 
         // set up the form
-        DegDAO degDAO = new DegDAO();
-        List<Degree> degreeList = degDAO.getDegList(new Degree());
-        grid.setItems(degreeList);
-        Grid.Column<Degree> degIDColumn = grid.addColumn(Degree::getDegId).setHeader("Degree Code").setAutoWidth(true);
-        Grid.Column<Degree> degNameColumn = grid.addColumn(Degree::getDegName).setHeader("Degree Name").setAutoWidth(true);
-        Grid.Column<Degree> leadDepColumn = grid.addColumn(Degree::getLeadDep).setHeader("Lead Department").setAutoWidth(true);
-        Grid.Column<Degree> editColumn = grid.addComponentColumn(user -> {
+        ModuleDAO moduleDAO = new ModuleDAO();
+        moduleList = moduleDAO.getModuleList(new Module());
+        grid.setItems(moduleList);
+        Grid.Column<Module> moduleIDColumn = grid.addColumn(Module::getModuleId).setHeader("Module Code").setAutoWidth(true);
+        Grid.Column<Module> moduleNameColumn = grid.addColumn(Module::getModuleName).setHeader("Module Name").setAutoWidth(true);
+        Grid.Column<Module> taughtSemColumn = grid.addColumn(Module::getTaughtSem).setHeader("Taught Semester").setAutoWidth(true);
+        Grid.Column<Module> editColumn = grid.addComponentColumn(module-> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
                 if (editor.isOpen())
                     editor.cancel();
-                grid.getEditor().editItem(user);
+                grid.getEditor().editItem(module);
             });
             return editButton;
         }).setWidth("30%").setFlexGrow(0);
@@ -72,56 +73,33 @@ public class ViewDegrees extends Div {
         grid.setHeightFull();
 
         // set up the in-line editor
-        Binder<Degree> degBinder = new Binder<>(Degree.class);
-        editor.setBinder(degBinder);
+        Binder<Module> moduleBinder = new Binder<>(Module.class);
+        editor.setBinder(moduleBinder);
         editor.setBuffered(true);
 
-        // retrieve department list
-        DepDAO depDAO = new DepDAO();
-        List<Department> departmentList =depDAO.getDepList(new Department());
-        leadDepList = new ArrayList<>();
-        for (Department dep:
-                departmentList) {
-            leadDepList.add(dep.getDepId());
+        // retrieve degree list
+        DegDAO degDAO = new DegDAO();
+        List<Degree> degreeList = degDAO.getDegList(new Degree());
+        degList = new ArrayList<>();
+        for (Degree degree:
+                degreeList) {
+            System.out.println(degreeList);
+            System.out.println(degree);
+            degList.add(degree.getDegId());
         }
-
-        leadDep = new ComboBox<>();
-        leadDep.setAllowCustomValue(true);
-        leadDep.addCustomValueSetListener(e -> {
-            String customValue = e.getDetail();
-            leadDepList.add(customValue);
-            leadDep.setItems(leadDepList);
-            leadDep.setValue(customValue);
-        });
-        leadDep.setItems(leadDepList);
-        degBinder.forField(leadDep).asRequired("Lead department must not be empty!")
-                .bind(Degree::getLeadDep, Degree::setLeadDep);
-        leadDepColumn.setEditorComponent(leadDep);
-
-        Button saveButton = new Button("Save", e -> {
-            try {
-                Degree degToBeUpdated = editor.getItem();
-                editor.save();
-                degDAO.update(leadDep.getValue(), degToBeUpdated.getDegId());
-                degDAO.linkDepDeg(leadDep.getValue(), degToBeUpdated.getDegId());
-            } catch (Exception ex) {
-                System.out.println(ex.toString());
-            }
-        });
 
         Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
                 e -> editor.cancel());
         Button deleteButton = new Button("Delete", e -> {
-            degDAO.delete(editor.getItem().getDegId());
-            fetchDegrees();
+            moduleDAO.delete(editor.getItem().getModuleId());
+            fetchModules();
         });
-        HorizontalLayout actions = new HorizontalLayout(saveButton,
-                deleteButton, cancelButton);
+        HorizontalLayout actions = new HorizontalLayout(deleteButton, cancelButton);
         actions.setPadding(false);
         editColumn.setEditorComponent(actions);
 
-        // Search users
-        GridListDataView<Degree> dataView = grid.setItems(degreeList);
+        // Search modules
+        GridListDataView<Module> dataView = grid.setItems(moduleList);
         TextField searchField = new TextField();
         searchField.setWidth("50%");
         searchField.setPlaceholder("Search");
@@ -129,19 +107,19 @@ public class ViewDegrees extends Div {
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addValueChangeListener(e -> dataView.refreshAll());
 
-        dataView.addFilter(degree -> {
+        dataView.addFilter(module -> {
             String searchTerm = searchField.getValue().trim();
 
             if (searchTerm.isEmpty())
                 return true;
 
-            boolean matchesDegID = matchesTerm(degree.getDegId(),
+            boolean matchesModuleID = matchesTerm(module.getModuleId(),
                     searchTerm);
-            boolean matchesDegName = matchesTerm(degree.getDegName(), searchTerm);
-            boolean matchesLeadDep = matchesTerm(degree.getLeadDep(),
+            boolean matchesModuleName = matchesTerm(module.getModuleName(), searchTerm);
+            boolean matchesTaughtSem = matchesTerm(module.getTaughtSem(),
                     searchTerm);
 
-            return matchesDegID || matchesDegName || matchesLeadDep;
+            return matchesModuleID || matchesModuleName || matchesTaughtSem;
         });
 
         VerticalLayout wrapper = new VerticalLayout();
@@ -150,7 +128,7 @@ public class ViewDegrees extends Div {
 
         // Add new user
         createEditorLayout(splitLayout);
-        splitLayout.setSplitterPosition(60);
+        splitLayout.setSplitterPosition(50);
         setHeightFull();
         splitLayout.setHeightFull();
         splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
@@ -159,7 +137,8 @@ public class ViewDegrees extends Div {
 
     private void createEditorLayout(SplitLayout splitLayout) {
         SplitLayout wrapper = new SplitLayout();
-        // Add new degree
+
+        // Add new module
         Div editorLayoutDiv = new Div();
         editorLayoutDiv.setClassName("editor-layout");
 
@@ -168,34 +147,35 @@ public class ViewDegrees extends Div {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        degID = new TextField("Degree Code");
-        degName = new TextField("Degree Name");
+        moduleID = new TextField("Module Code");
+        moduleName = new TextField("Module Name");
 
-        leadDep2 = new ComboBox<>("Lead Department");
-        leadDep2.setAllowCustomValue(true);
-        leadDep2.addCustomValueSetListener(e -> {
+
+        List<String> taughtSemList = List.of(new String[]{"autumn", "spring", "year"});
+        taughtSem = new ComboBox<>("Taught Semester");
+        taughtSem.setAllowCustomValue(true);
+        taughtSem.addCustomValueSetListener(e -> {
             String customValue = e.getDetail();
-            leadDepList.add(customValue);
-            leadDep2.setItems(leadDepList);
-            leadDep2.setValue(customValue);
+            taughtSemList.add(customValue);
+            taughtSem.setItems(taughtSemList);
+            taughtSem.setValue(customValue);
         });
-        leadDep2.setItems(leadDepList);
-        leadDep2.setAllowCustomValue(true);
+        taughtSem.setItems(taughtSemList);
 
-        Component[] fields = new Component[]{degID, degName, leadDep2};
+        Component[] fields = new Component[]{moduleID, moduleName, taughtSem};
 
         formLayout.add(fields);
-        editorDiv.add(new H3("Add a new Degree:"));
+        editorDiv.add(new H3("Add a new module:"));
         editorDiv.add(formLayout);
         editorDiv.add(addButton);
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addButton.addClickListener(e -> {
-            addNewDegree();
+            addNewModule();
         });
 
         wrapper.addToPrimary(editorDiv);
 
-        // Link a department to a degree
+        // Link a degree to a module
         Div editorLayoutDiv2 = new Div();
         editorLayoutDiv2.setClassName("editor-layout");
 
@@ -212,30 +192,57 @@ public class ViewDegrees extends Div {
                 degList) {
             degIdList.add(deg.getDegId());
         }
-        degBox = new ComboBox<>("Degree Code");
-        degBox.setAllowCustomValue(true);
-        degBox.addCustomValueSetListener(e -> {
+
+
+        linkedDeg.setAllowCustomValue(true);
+        linkedDeg.addCustomValueSetListener(e -> {
             String customValue = e.getDetail();
             degIdList.add(customValue);
-            degBox.setItems(degIdList);
-            degBox.setValue(customValue);
+            linkedDeg.setItems(degIdList);
+            linkedDeg.setValue(customValue);
         });
-        degBox.setItems(degIdList);
-        degBox.setAllowCustomValue(true);
+        linkedDeg.setItems(degIdList);
 
-        depBox = new ComboBox<>("Lead Department");
-        depBox.setAllowCustomValue(true);
-        depBox.addCustomValueSetListener(e -> {
+        ArrayList<String> moduleIdList = new ArrayList<>();
+        for (Module module:
+                moduleList) {
+            moduleIdList.add(module.getModuleId());
+        }
+        linkedModule = new ComboBox<>("Module Code");
+        linkedModule.setAllowCustomValue(true);
+        linkedModule.addCustomValueSetListener(e -> {
             String customValue = e.getDetail();
-            leadDepList.add(customValue);
-            depBox.setItems(leadDepList);
-            depBox.setValue(customValue);
+            moduleIdList.add(customValue);
+            linkedModule.setItems(moduleIdList);
+            linkedModule.setValue(customValue);
         });
-        depBox.setItems(leadDepList);
-        depBox.setAllowCustomValue(true);
+        linkedModule.setItems(moduleIdList);
+        linkedModule.setAllowCustomValue(true);
+
+        List<String> levelOfStudyList = List.of(new String[]{"1", "2", "3", "4"});
+        levelOfStudy = new ComboBox<>("Level of Study");
+        levelOfStudy.setAllowCustomValue(true);
+        levelOfStudy.addCustomValueSetListener(e -> {
+            String customValue = e.getDetail();
+            levelOfStudyList.add(customValue);
+            levelOfStudy.setItems(levelOfStudyList);
+            levelOfStudy.setValue(customValue);
+        });
+        levelOfStudy.setItems(levelOfStudyList);
+
+        List<String> moduleTypeList = List.of(new String[]{"Non-Core", "Core"});
+        moduleType = new ComboBox<>("Module Type");
+        moduleType.setAllowCustomValue(true);
+        moduleType.addCustomValueSetListener(e -> {
+            String customValue = e.getDetail();
+            levelOfStudyList.add(customValue);
+            moduleType.setItems(moduleTypeList);
+            moduleType.setValue(customValue);
+        });
+        moduleType.setItems(moduleTypeList);
 
 
-        Component[] fields2 = new Component[]{depBox, degBox};
+        Component[] fields2 = new Component[]{linkedDeg, linkedModule, levelOfStudy, moduleType};
 
         formLayout2.add(fields2);
         editorDiv2.add(new H3("Link degree to department:"));
@@ -255,50 +262,47 @@ public class ViewDegrees extends Div {
     }
 
 
-    private void fetchDegrees(){
-        DegDAO degDAO = new DegDAO();
-        List<Degree> degList = degDAO.getDegList(new Degree());
-        grid.setItems(degList);
+    private void fetchModules(){
+        ModuleDAO moduleDAO = new ModuleDAO();
+        List<Module> moduleList = moduleDAO.getModuleList(new Module());
+        grid.setItems(moduleList);
     }
 
     private boolean matchesTerm(String value, String searchTerm) {
         return value.toLowerCase().contains(searchTerm.toLowerCase());
     }
 
-    private void addNewDegree(){
-        Degree degToBeAdded = new Degree();
-        degToBeAdded.setDegId(degID.getValue());
-        degToBeAdded.setDegName(degName.getValue());
-        degToBeAdded.setLeadDep(leadDep2.getValue());
+    private void addNewModule(){
+        ModuleDAO moduleDAO = new ModuleDAO();
+        Module moduleToBeAdded = new Module();
+        moduleToBeAdded.setModuleId(moduleID.getValue());
+        moduleToBeAdded.setModuleName(moduleName.getValue());
+        moduleToBeAdded.setTaughtSem(taughtSem.getValue());
         DegDAO degDAO = new DegDAO();
-        if(degDAO.addDeg(degToBeAdded)){
+        if(moduleDAO.addMod(moduleToBeAdded)){
             Notification notification = Notification.show("Successfully added!");
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             notification.setPosition(Notification.Position.TOP_CENTER);
+            fetchModules();
         }else{
             Notification notification = Notification.show("Failed!");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.TOP_CENTER);
         }
-        String degId = degID.getValue();
-        String depId = leadDep2.getValue();
-        if(degDAO.linkDepDeg(depId, degId)){
-            Notification notification = Notification.show("Successfully linked!");
-            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            notification.setPosition(Notification.Position.TOP_CENTER);
-        }else{
-            Notification notification = Notification.show("Failed!");
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            notification.setPosition(Notification.Position.TOP_CENTER);
-        }
-        fetchDegrees();
     }
 
     private void linkDep() {
-        String degId = degBox.getValue();
-        String depId = depBox.getValue();
-        DegDAO degDAO = new DegDAO();
-        if(degDAO.linkDepDeg(depId, degId)){
+        String moduleId = linkedModule.getValue();
+        String depId = linkedDeg.getValue();
+        String level = levelOfStudy.getValue();
+        int type = -1;
+        if (moduleType.getValue().equals("Core")) {
+            type = 1;
+        } else if (moduleType.getValue().equals("Non-Core")) {
+            type = 0;
+        }
+        ModuleDAO moduleDAO = new ModuleDAO();
+        if(moduleDAO.linkDegMod(depId, moduleId, level, type)){
             Notification notification = Notification.show("Successfully linked!");
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             notification.setPosition(Notification.Position.TOP_CENTER);

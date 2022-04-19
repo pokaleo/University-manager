@@ -122,6 +122,8 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Manage Degrees", "la la-columns", ViewDegrees.class),
 
+                new MenuItemInfo("Manage Modules", "la la-columns", ViewModules.class),
+
                 new MenuItemInfo("About", "la la-file", Login2.class), //
 
         };

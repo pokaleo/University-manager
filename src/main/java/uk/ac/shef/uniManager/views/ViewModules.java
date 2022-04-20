@@ -83,8 +83,6 @@ public class ViewModules extends Div {
         degList = new ArrayList<>();
         for (Degree degree:
                 degreeList) {
-            System.out.println(degreeList);
-            System.out.println(degree);
             degList.add(degree.getDegId());
         }
 

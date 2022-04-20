@@ -2,13 +2,11 @@ package uk.ac.shef.uniManager.DAO;
 
 
 import uk.ac.shef.uniManager.model.Student;
+import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +108,8 @@ public class StudentDAO extends BaseDAO{
     }
 
     public boolean checkReg (String username){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         try {
             String sql ="Select * from students where username=?";
             PreparedStatement ps2 = conn.prepareStatement(sql);
@@ -151,6 +151,8 @@ public class StudentDAO extends BaseDAO{
     }
 
     public boolean addStudent(Student student){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String sql = "insert into students values(?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -174,6 +176,8 @@ public class StudentDAO extends BaseDAO{
     }
 
     public boolean delete(String username){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String sql = "delete from students where username=?";
         String sql2 = "delete from users where username=?";
         try {
@@ -193,6 +197,8 @@ public class StudentDAO extends BaseDAO{
 
 
     public boolean addCoreModule(int level, String username, String degId){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         List<String> mods = new ArrayList<>();
         boolean b = false;
         try {
@@ -247,6 +253,7 @@ public class StudentDAO extends BaseDAO{
                 s.setTutor(executeQuery.getString("tutor"));
                 s.setRegDeg(executeQuery.getString("registeredDegree"));
                 s.setRegNumber(executeQuery.getInt("registrationNumber"));
+                s.setPeriodOfStudy(executeQuery.getString("periodOfStudy"));
                 retList.add(s);
             }
         } catch (SQLException e) {
@@ -257,6 +264,8 @@ public class StudentDAO extends BaseDAO{
     }
 
     public String period(String username){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String  period = null;
         try {
             PreparedStatement st = conn.prepareStatement(
@@ -275,6 +284,8 @@ public class StudentDAO extends BaseDAO{
     }
 
     public boolean isGradu(String username){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String  period = null;
         try {
             PreparedStatement st = conn.prepareStatement(

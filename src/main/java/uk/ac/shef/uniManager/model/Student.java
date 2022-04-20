@@ -63,6 +63,9 @@ public class Student {
     public void setUsername(String username) {
         this.username = username;
     }
+    public String getFullName() {
+        return forename + " " + surname;
+    }
     @Override
     public String toString(){
         return this.username;

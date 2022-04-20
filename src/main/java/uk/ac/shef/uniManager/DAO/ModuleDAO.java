@@ -88,6 +88,8 @@ public class ModuleDAO extends BaseDAO {
     }
 
     public boolean oneYearMaster(String degId){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String sql = "select degName from degrees where degId =?";
         String degName = null;
         try {
@@ -96,9 +98,9 @@ public class ModuleDAO extends BaseDAO {
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
                 degName = (rs.getString("degName"));
-                degName = degName.substring(0,3);
+                degName = degName.substring(0,1);
             }
-            if(degName.equals("MSc")){
+            if(degName.equals("M")){
                 return true;
             }
         } catch (SQLException e) {

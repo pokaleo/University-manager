@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @PageTitle("Admin Dashboard")
-@Route(value = "/admin", layout = MainLayout.class)
+@Route(value = "/viewUsers", layout = MainLayout.class)
 @RolesAllowed("ROLE_admin")
 public class ViewUsers extends Div {
     @Autowired

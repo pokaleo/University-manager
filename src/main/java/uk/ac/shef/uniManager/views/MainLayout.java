@@ -7,18 +7,13 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Nav;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.UnorderedList;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+import org.springframework.core.io.ResourceLoader;
 import uk.ac.shef.uniManager.utils.SecurityService;
+import uk.ac.shef.uniManager.utils.SecurityUtils;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -41,7 +36,10 @@ public class MainLayout extends AppLayout {
             Span text = new Span(menuTitle);
             text.addClassNames("menu-item-text");
 
-            link.add(new LineAwesomeIcon(iconClass), text);
+
+
+            // link.add(new LineAwesomeIcon(iconClass), text);
+            link.add(new Image("icons/"+ iconClass, "menu-icon"), text);
             add(link);
         }
 
@@ -50,18 +48,9 @@ public class MainLayout extends AppLayout {
         }
 
         /**
-         * Simple wrapper to create icons using LineAwesome iconset. See
+         * Simple wrapper to create icons using LineAwesome icon set. See
          * https://icons8.com/line-awesome
          */
-        @NpmPackage(value = "line-awesome", version = "1.3.0")
-        public static class LineAwesomeIcon extends Span {
-            public LineAwesomeIcon(String lineawesomeClassnames) {
-                addClassNames("menu-item-icon");
-                if (!lineawesomeClassnames.isEmpty()) {
-                    addClassNames(lineawesomeClassnames);
-                }
-            }
-        }
 
     }
 
@@ -115,17 +104,30 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
-                new MenuItemInfo("Manage Users", "la la-columns", ViewUsers.class), //
+        if (SecurityUtils.isUserLoggedIn()){
+            // get user role
+            String userType = SecurityUtils.getUserType();
+            if ("ROLE_admin".equals(userType)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Manage Users", "users.svg", ViewUsers.class),
 
-                new MenuItemInfo("Manage Departments", "la la-columns", ViewDepartments.class),
+                        new MenuItemInfo("Manage Departments", "deps.svg", ViewDepartments.class),
 
-                new MenuItemInfo("Manage Degrees", "la la-columns", ViewDegrees.class),
+                        new MenuItemInfo("Manage Degrees", "degs.svg", ViewDegrees.class),
 
-                new MenuItemInfo("Manage Modules", "la la-columns", ViewModules.class),
+                        new MenuItemInfo("Manage Modules", "mods.svg", ViewModules.class),
 
-                new MenuItemInfo("About", "la la-file", Login2.class), //
+                        new MenuItemInfo("About", "mods.svg", Login2.class), //
+                };
+            }
+            if ("ROLE_registrar".equals(userType)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Manage Students", "users.svg", ViewUsers.class), //
 
+                };
+            }
+        }
+        return new MenuItemInfo[]{
         };
     }
 
@@ -136,7 +138,6 @@ public class MainLayout extends AppLayout {
 
         H1 logo = new H1("Vaadin CRM");
         logo.addClassName("logo");
-        HorizontalLayout header;
         SecurityService securityService = new SecurityService();
         if (securityService.getAuthenticatedUser() != null) {
             Button logout = new Button("Logout", click ->

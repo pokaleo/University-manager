@@ -114,7 +114,6 @@
   "@vaadin/flow-frontend": "./target/flow-frontend",
   "construct-style-sheets-polyfill": "3.0.4",
   "date-fns": "2.23.0",
-  "line-awesome": "1.3.0",
   "lit": "2.1.4",
   "@vaadin/application-theme-plugin": "./target/plugins/application-theme-plugin",
   "@vaadin/build-status-plugin": "./target/plugins/build-status-plugin",

@@ -27,6 +27,10 @@ public class MainLayout extends AppLayout {
 
         private final Class<? extends Component> view;
 
+        /**
+         * Simple wrapper to create icons using LineAwesome icon set. See
+         * https://icons8.com/line-awesome
+         */
         public MenuItemInfo(String menuTitle, String iconClass, Class<? extends Component> view) {
             this.view = view;
             RouterLink link = new RouterLink();
@@ -39,7 +43,10 @@ public class MainLayout extends AppLayout {
 
 
             // link.add(new LineAwesomeIcon(iconClass), text);
-            link.add(new Image("icons/"+ iconClass, "menu-icon"), text);
+            Image icon = new Image("icons/"+ iconClass, "menu-icon");
+            icon.setHeight("24px");
+            icon.setWidth("24px");
+            link.add(icon, text);
             add(link);
         }
 
@@ -47,10 +54,6 @@ public class MainLayout extends AppLayout {
             return view;
         }
 
-        /**
-         * Simple wrapper to create icons using LineAwesome icon set. See
-         * https://icons8.com/line-awesome
-         */
 
     }
 
@@ -117,12 +120,14 @@ public class MainLayout extends AppLayout {
 
                         new MenuItemInfo("Manage Modules", "mods.svg", ViewModules.class),
 
-                        new MenuItemInfo("About", "mods.svg", Login2.class), //
+                        new MenuItemInfo("About", "mods.svg", Login2.class),
                 };
             }
             if ("ROLE_registrar".equals(userType)) {
                 return new MenuItemInfo[]{
-                        new MenuItemInfo("Manage Students", "users.svg", ViewUsers.class), //
+                        new MenuItemInfo("Manage Students", "users.svg", ManageStudents.class),
+
+                        new MenuItemInfo("Check Registrations", "registration.svg", CheckRegistration.class),
 
                 };
             }

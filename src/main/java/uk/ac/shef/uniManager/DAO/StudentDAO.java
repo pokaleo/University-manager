@@ -251,6 +251,7 @@ public class StudentDAO extends BaseDAO{
                 s.setUsername(executeQuery.getString("username"));
                 s.setTitle(executeQuery.getString("title"));
                 s.setTutor(executeQuery.getString("tutor"));
+                s.setEmail(executeQuery.getString("email"));
                 s.setRegDeg(executeQuery.getString("registeredDegree"));
                 s.setRegNumber(executeQuery.getInt("registrationNumber"));
                 s.setPeriodOfStudy(executeQuery.getString("periodOfStudy"));

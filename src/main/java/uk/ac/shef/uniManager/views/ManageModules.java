@@ -58,7 +58,6 @@ public class ManageModules extends Div {
 
     private void fetchChoices(String username) {
         StudentModDAO studentModDAO = new StudentModDAO();
-        System.out.println("66666" + username);
         choiceList = studentModDAO.getList(username);
         level = choiceList.get(0).getPeriodOfStudy();
         sum = 0;

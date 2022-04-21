@@ -11,8 +11,9 @@ import java.sql.ResultSet;
 public class EmailCheck extends BaseDAO {
     public static boolean checkExist(String emailAddr) {
         boolean exitst = false;
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         try {
-            Connection conn = new DbConn().getCon();
             String sql = "select CASE WHEN count(1) > 0 THEN TRUE ELSE FALSE END from " +
                     "students where email = '" + emailAddr + "'";
             PreparedStatement st = (PreparedStatement) conn

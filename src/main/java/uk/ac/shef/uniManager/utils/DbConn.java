@@ -22,7 +22,6 @@ public class DbConn {
         try {
             con = DriverManager.getConnection(dburl, dbusername, dbpassword);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return con;

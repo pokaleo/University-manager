@@ -1,17 +1,17 @@
 package uk.ac.shef.uniManager.DAO;
 
-import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.shef.uniManager.model.Department;
 import uk.ac.shef.uniManager.model.Module;
 import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 public class ModuleDAO extends BaseDAO {
     public boolean addMod(Module module){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String sql = "insert into modules values(?,?,?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -26,24 +26,6 @@ public class ModuleDAO extends BaseDAO {
         return false;
     }
 
-    public DefaultTableModel query() {
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Module Code", "Module Name", "Taught Semester"},
-                0);
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select moduleId, moduleName, taughtSem from modules");
-            while (rs.next()) {
-                String moduleId = (rs.getString("moduleId"));
-                String moduleName = (rs.getString("moduleName"));
-                String taughtSem = (rs.getString("taughtSem"));
-                model.addRow(new Object[]{moduleId, moduleName, taughtSem});
-            }
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return model;
-    }
     public boolean delete(String moduleId){
         DbConn dbConn = new DbConn();
         Connection con = dbConn.getCon();
@@ -111,6 +93,8 @@ public class ModuleDAO extends BaseDAO {
 
     public List<Module> getModuleList(Module module) {
         List<Module> retList = new ArrayList<Module>();
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         StringBuffer sqlString = new StringBuffer("select * from modules");
         if(!StringUtil.isEmpty(module.getModuleId())){
             sqlString.append(" where moduleId like '%"+module.getModuleId()+"%'");
@@ -123,9 +107,6 @@ public class ModuleDAO extends BaseDAO {
                 module1.setModuleId(executeQuery.getString("moduleId"));
                 module1.setModuleName(executeQuery.getString("moduleName"));
                 module1.setTaughtSem(executeQuery.getString("taughtSem"));
-                /**
-                 * here can add the username and password
-                 */
                 retList.add(module1);
             }
             conn.close();

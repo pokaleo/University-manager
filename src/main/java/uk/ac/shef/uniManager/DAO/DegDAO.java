@@ -33,7 +33,8 @@ public class DegDAO extends BaseDAO{
 
 
     public List<Degree> getDegList(Degree degree) {
-        // TODO Auto-generated method stub
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         List<Degree> retList = new ArrayList<Degree>();
         StringBuffer sqlString = new StringBuffer("select * from degrees");
         if(!StringUtil.isEmpty(degree.getDegId())){
@@ -47,14 +48,10 @@ public class DegDAO extends BaseDAO{
                 degree1.setDegId(executeQuery.getString("degId"));
                 degree1.setDegName(executeQuery.getString("degName"));
                 degree1.setLeadDep(executeQuery.getString("leadDep"));
-                /**
-                 * here can add the username and password
-                 */
                 retList.add(degree1);
             }
             conn.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return retList;
@@ -112,22 +109,5 @@ public class DegDAO extends BaseDAO{
             e.printStackTrace();
         }
         return false;
-    }
-    public DefaultTableModel query(){
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Degree Code", "Degree Name","Lead Department"},
-                0);
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select degId, degName, leadDep from degrees");
-            while(rs.next()){
-                String userName = (rs.getString("degId"));
-                String userType = (rs.getString("degName"));
-                String leadDep = (rs.getString("leadDep"));
-                model.addRow(new Object[]{userName, userType, leadDep});
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return model;
     }
 }

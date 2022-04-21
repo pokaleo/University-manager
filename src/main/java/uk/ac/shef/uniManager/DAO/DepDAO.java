@@ -13,6 +13,8 @@ import java.util.List;
 
 public class DepDAO extends BaseDAO{
     public boolean addDep(Department department){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String sql = "insert into departments values(?,?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -30,7 +32,8 @@ public class DepDAO extends BaseDAO{
 
 
     public List<Department> getDepList(Department department) {
-        // TODO Auto-generated method stub
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         List<Department> retList = new ArrayList<Department>();
         StringBuffer sqlString = new StringBuffer("select * from departments");
         if(!StringUtil.isEmpty(department.getDepId())){
@@ -43,14 +46,10 @@ public class DepDAO extends BaseDAO{
                 Department t = new Department();
                 t.setDepId(executeQuery.getString("depId"));
                 t.setDepName(executeQuery.getString("depName"));
-                /**
-                 * here can add the username and password
-                 */
                 retList.add(t);
             }
             conn.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return retList;
@@ -58,12 +57,12 @@ public class DepDAO extends BaseDAO{
     }
     public boolean delete(String depId){
         DbConn dbConn = new DbConn();
-        Connection con = dbConn.getCon();
+        Connection conn = dbConn.getCon();
         String sql = "delete from departments where depId=?";
         String sql2 = "delete from DepDeg where depId=?";
         try {
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            PreparedStatement ps2 = con.prepareStatement(sql2);
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
             preparedStatement.setString(1, depId);
             ps2.setString(1,depId);
             ps2.executeUpdate();
@@ -75,21 +74,5 @@ public class DepDAO extends BaseDAO{
             e.printStackTrace();
         }
         return false;
-    }
-    public DefaultTableModel query(){
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Department Code", "Department Name"},
-                0);
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select depId, depName from departments");
-            while(rs.next()){
-                String userName = (rs.getString("depId"));
-                String userType = (rs.getString("depName"));
-                model.addRow(new Object[]{userName, userType});
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return model;
     }
 }

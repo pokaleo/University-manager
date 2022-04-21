@@ -134,6 +134,17 @@ public class MainLayout extends AppLayout {
                         new MenuItemInfo("Manage Modules", "mods.svg", ManageModules.class),
                 };
             }
+            if ("ROLE_teacher".equals(userType)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Manage Students", "users.svg", ManageStudents.class),
+
+                        new MenuItemInfo("Check Registrations", "registration.svg", CheckRegistration.class),
+
+                        new MenuItemInfo("Check Credits", "modules.svg", CheckCredits.class),
+
+                        new MenuItemInfo("Manage Modules", "mods.svg", ManageModules.class),
+                };
+            }
         }
         return new MenuItemInfo[]{
         };

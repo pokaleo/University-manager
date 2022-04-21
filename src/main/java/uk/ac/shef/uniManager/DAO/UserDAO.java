@@ -32,8 +32,6 @@ public class UserDAO extends BaseDAO{
         return false;
     }
 
-
-
     public List<User> getUserList(User user) {
         DbConn dbConn = new DbConn();
         Connection con = dbConn.getCon();

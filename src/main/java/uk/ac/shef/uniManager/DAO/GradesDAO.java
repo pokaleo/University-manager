@@ -3,10 +3,12 @@ package uk.ac.shef.uniManager.DAO;
 
 
 import uk.ac.shef.uniManager.model.Grades;
+import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,8 @@ public class GradesDAO extends BaseDAO{
 
     public JComboBox queryModule(String username){
         JComboBox comboBox= new JComboBox();
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         try {
             String sql = "SELECT module FROM grades WHERE username=?";
             String module = null;

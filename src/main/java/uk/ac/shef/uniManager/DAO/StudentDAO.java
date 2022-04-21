@@ -33,6 +33,7 @@ public class StudentDAO extends BaseDAO{
     }
         return studentRst;
     }
+
     public DefaultTableModel tableModel(){
         DefaultTableModel model = new DefaultTableModel(new String[]{"Username", "name", "Degree","Registration No.",
                 "Period of Study"},

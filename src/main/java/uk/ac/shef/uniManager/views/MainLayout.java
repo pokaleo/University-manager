@@ -131,6 +131,7 @@ public class MainLayout extends AppLayout {
 
                         new MenuItemInfo("Check Credits", "modules.svg", CheckCredits.class),
 
+                        new MenuItemInfo("Manage Modules", "mods.svg", ManageModules.class),
                 };
             }
         }

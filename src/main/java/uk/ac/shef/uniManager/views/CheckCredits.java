@@ -48,7 +48,7 @@ public class CheckCredits extends Div {
 
         splitLayout.addToPrimary(grid);
         createEditorLayout(splitLayout);
-        splitLayout.setSplitterPosition(70);
+        splitLayout.setSplitterPosition(60);
         setHeightFull();
         splitLayout.setHeightFull();
         splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);

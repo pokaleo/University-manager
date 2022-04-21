@@ -129,6 +129,8 @@ public class MainLayout extends AppLayout {
 
                         new MenuItemInfo("Check Registrations", "registration.svg", CheckRegistration.class),
 
+                        new MenuItemInfo("Check Credits", "modules.svg", CheckCredits.class),
+
                 };
             }
         }

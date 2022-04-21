@@ -33,7 +33,6 @@ import uk.ac.shef.uniManager.utils.PasswordUtils;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.annotation.security.RolesAllowed;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;

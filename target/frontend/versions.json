@@ -127,5 +127,21 @@
   "vite-plugin-checker": "0.3.4",
   "workbox-build": "6.5.0",
   "workbox-core": "6.5.0",
-  "workbox-precaching": "6.5.0"
+  "workbox-precaching": "6.5.0",
+  "compression-webpack-plugin": "4.0.1",
+  "esbuild-loader": "2.15.1",
+  "webpack-cli": "4.9.2",
+  "css-loader": "5.2.7",
+  "file-loader": "6.2.0",
+  "fork-ts-checker-webpack-plugin": "6.2.1",
+  "extra-watch-webpack-plugin": "1.0.3",
+  "lit-css-loader": "0.1.0",
+  "loader-utils": "2.0.0",
+  "webpack": "4.46.0",
+  "html-webpack-plugin": "4.5.1",
+  "chokidar": "^3.5.0",
+  "webpack-merge": "4.2.2",
+  "webpack-dev-server": "4.7.4",
+  "extract-loader": "5.1.0",
+  "workbox-webpack-plugin": "6.5.0"
 }

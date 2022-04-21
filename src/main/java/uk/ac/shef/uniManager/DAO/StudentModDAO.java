@@ -2,11 +2,17 @@ package uk.ac.shef.uniManager.DAO;
 
 
 import uk.ac.shef.uniManager.model.Student;
+import uk.ac.shef.uniManager.model.StudentModule;
+import uk.ac.shef.uniManager.utils.DbConn;
+import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentModDAO extends BaseDAO{
 
@@ -29,6 +35,59 @@ public class StudentModDAO extends BaseDAO{
             e.printStackTrace();
         }
         return studentRst;
+    }
+
+    public List<StudentModule> getList(String username) {
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        List<StudentModule> retList = new ArrayList<StudentModule>();
+        int credits = 0;
+        String fullName = "";
+        try {
+            int level = 0;
+            String leveltemp;
+            String sql2 = "Select periodOfStudy, forename, surname from Students where username=? ";
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            ps2.setString(1, username);
+            ResultSet rs2 = ps2.executeQuery();
+            if (rs2.next()){
+                leveltemp = (rs2.getString("periodOfStudy"));
+                leveltemp = leveltemp.substring(leveltemp.length() - 1);
+                fullName = ((rs2.getString("forename") + " " +
+                        (rs2.getString("surname"))));
+                level = Integer.parseInt(leveltemp);
+                if (level<4){
+                    credits=20;
+                }else if(level == 4) {
+                    credits=15;
+                }
+            }
+            String sql = "Select module from StudentMod WHERE username=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                StudentModule studentModule = new StudentModule();
+                studentModule.setUsername(username);
+                studentModule.setFullName(fullName);
+                studentModule.setPeriodOfStudy(level);
+                studentModule.setModuleId(rs.getString("module"));
+                if (studentModule.getModuleId().equals("DISERT")) {
+                    if(level == 3){
+                        studentModule.setCredits(30);
+                    }
+                    if(level == 4){
+                        studentModule.setCredits(60);
+                    }
+                } else {
+                    studentModule.setCredits(credits);
+                }
+                retList.add(studentModule);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return retList;
     }
 
     public DefaultTableModel tableModel(String username){

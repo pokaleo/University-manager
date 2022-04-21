@@ -59,6 +59,12 @@ public class LandingView extends HorizontalLayout implements BeforeEnterObserver
                 notification.setPosition(Notification.Position.TOP_CENTER);
                 event.forwardTo(ManageStudents.class);
             }
+            if("ROLE_teacher".equals(userType)){
+                Notification notification = Notification.show("Login successfully! Your role is teacher.");
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.setPosition(Notification.Position.TOP_CENTER);
+                event.forwardTo(ManageGrades.class);
+            }
         }
     }
 }

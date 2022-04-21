@@ -42,6 +42,24 @@ public class GradesDAO extends BaseDAO{
         return comboBox;
     }
 
+    public boolean addGrade(Grades grades) {
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        String sql = "insert into grades values(?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, grades.getUsername());
+            preparedStatement.setString(2, grades.getModId());
+            preparedStatement.setString(3, grades.getGrades1Str());
+            preparedStatement.setString(4, grades.getGrades2Str());
+            preparedStatement.setString(5, grades.getLevelOfStudy());
+            if(preparedStatement.executeUpdate() > 0)return true;
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean update1(Grades grades, String username, String module ){
         String sql = "update grades set grades1 = ? , grades2= ? where username=? and module=?";
@@ -222,33 +240,40 @@ public class GradesDAO extends BaseDAO{
         return  meanGrades;
     }
 
-    public boolean delete(String username){
-        String sql = "delete from grades where username=?";
+    public boolean delete(String username, String module, String levelOfStudy){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        String sql = "delete from grades where username=? and module =? and levelOfStudy=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, module);
+            preparedStatement.setString(3, levelOfStudy);
             if(preparedStatement.executeUpdate() > 0){
                 return true;
             }
+            conn.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return false;
     }
 
     public boolean update(Grades grades){
-        String sql = "update grades set grades1 = ? , grades2= ? where username=?";
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        String sql = "update grades set grades1 = ? , grades2= ? where username=? and module=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, grades.getGrades1());
             preparedStatement.setInt(2, grades.getGrades2());
             preparedStatement.setString(3, grades.getUsername());
+            preparedStatement.setString(4, grades.getModId());
             if(preparedStatement.executeUpdate() > 0){
                 return true;
             }
+            conn.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return false;

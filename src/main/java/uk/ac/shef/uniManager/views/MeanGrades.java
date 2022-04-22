@@ -217,8 +217,10 @@ public class MeanGrades extends Div {
         meanGradesList = gradesDAO.getMeanGradesList(username, level);
         grid.removeAllColumns();
         grid.setItems(meanGradesList);
-        Grid.Column<Grades> nameColumn = grid.addColumn(Grades::getModId).setHeader("Module Code").setAutoWidth(true);
-        Grid.Column<Grades> moduleColumn = grid.addColumn(Grades::getGrades1Str).setHeader("Best Attempt").setAutoWidth(true);
+        Grid.Column<Grades> nameColumn = grid.addColumn(Grades::getModId).setHeader("Module Code").setAutoWidth(true)
+                .setSortable(true);
+        Grid.Column<Grades> moduleColumn = grid.addColumn(Grades::getGrades1Str).setHeader("Best Attempt")
+                .setAutoWidth(true).setSortable(true);
     }
 
     private void progress (int currentLevel, boolean fail, String studentUsername) {

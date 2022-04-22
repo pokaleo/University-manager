@@ -45,8 +45,10 @@ public class ViewDepartments extends Div {
         DepDAO depDAO = new DepDAO();
         List<Department> depList = depDAO.getDepList(new Department());
         grid.setItems(depList);
-        Grid.Column<Department> depIdColumn = grid.addColumn(Department::getDepId).setHeader("Department Code").setAutoWidth(true);
-        Grid.Column<Department> depNameColumn = grid.addColumn(Department::getDepName).setHeader("Department Name").setAutoWidth(true);
+        Grid.Column<Department> depIdColumn = grid.addColumn(Department::getDepId).setHeader("Department Code")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Department> depNameColumn = grid.addColumn(Department::getDepName).setHeader("Department Name")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<Department> editColumn = grid.addComponentColumn(department -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {

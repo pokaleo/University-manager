@@ -63,11 +63,16 @@ public class ManageStudents extends Div {
         StudentDAO studentDAO = new StudentDAO();
         studentList = studentDAO.getStudentList(new Student());
         grid.setItems(studentList);
-        Grid.Column<Student> userNameColumn = grid.addColumn(Student::getUsername).setHeader("Username").setAutoWidth(true);
-        Grid.Column<Student> nameColumn = grid.addColumn(Student::getFullName).setHeader("Name").setAutoWidth(true);
-        Grid.Column<Student> degreeColumn = grid.addColumn(Student::getRegDeg).setHeader("Degree").setAutoWidth(true);
-        Grid.Column<Student> regNumberColumn = grid.addColumn(Student::getRegNumber).setHeader("Registration Number").setAutoWidth(true);
-        Grid.Column<Student> periodColumn = grid.addColumn(Student::getPeriodOfStudy).setHeader("Period of Study").setAutoWidth(true);
+        Grid.Column<Student> userNameColumn = grid.addColumn(Student::getUsername).setHeader("Username")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> nameColumn = grid.addColumn(Student::getFullName).setHeader("Name")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> degreeColumn = grid.addColumn(Student::getRegDeg).setHeader("Degree")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> regNumberColumn = grid.addColumn(Student::getRegNumber).setHeader("Registration Number")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> periodColumn = grid.addColumn(Student::getPeriodOfStudy).setHeader("Period of Study")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<Student> editColumn = grid.addComponentColumn(student -> {
             com.vaadin.flow.component.button.Button editButton = new com.vaadin.flow.component.button.Button("Edit");
             editButton.addClickListener(e -> {

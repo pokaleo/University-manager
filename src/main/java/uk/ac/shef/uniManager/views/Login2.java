@@ -17,6 +17,8 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import uk.ac.shef.uniManager.model.User;
 import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
@@ -94,7 +96,8 @@ public class Login2 extends VerticalLayout {
 
         // get user role
         Label label = new Label(SecurityUtils.getUserType().toString());
-        Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
+//        Label label2 = new Label(new Boolean(SecurityUtils.getUserType().toString().contains("admin")).toString());
+        Label label2 = new Label(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray().toString());
         add(label, label2);
 
         setHeightFull();

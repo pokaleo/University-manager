@@ -56,9 +56,12 @@ public class ViewDegrees extends Div {
         DegDAO degDAO = new DegDAO();
         List<Degree> degreeList = degDAO.getDegList(new Degree());
         grid.setItems(degreeList);
-        Grid.Column<Degree> degIDColumn = grid.addColumn(Degree::getDegId).setHeader("Degree Code").setAutoWidth(true);
-        Grid.Column<Degree> degNameColumn = grid.addColumn(Degree::getDegName).setHeader("Degree Name").setAutoWidth(true);
-        Grid.Column<Degree> leadDepColumn = grid.addColumn(Degree::getLeadDep).setHeader("Lead Department").setAutoWidth(true);
+        Grid.Column<Degree> degIDColumn = grid.addColumn(Degree::getDegId).setHeader("Degree Code")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Degree> degNameColumn = grid.addColumn(Degree::getDegName).setHeader("Degree Name")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Degree> leadDepColumn = grid.addColumn(Degree::getLeadDep).setHeader("Lead Department")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<Degree> editColumn = grid.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {

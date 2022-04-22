@@ -143,6 +143,14 @@ public class MainLayout extends AppLayout {
                         new MenuItemInfo("Students' Outcome & Status", "students.svg", CheckStudents.class),
                 };
             }
+            if ("ROLE_student".equals(userType)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("View Record & Status", "registration.svg", CheckStatus.class),
+
+                        new MenuItemInfo("View Grades", "degs.svg", CheckGrades.class),
+
+                };
+            }
         }
         return new MenuItemInfo[]{
         };

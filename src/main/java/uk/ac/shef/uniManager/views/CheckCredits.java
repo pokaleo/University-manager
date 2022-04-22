@@ -65,10 +65,14 @@ public class CheckCredits extends Div {
             sum += studentModule.getCredits();
         }
         grid.setItems(choiceList);
-        Grid.Column<StudentModule> usernameColumn = grid.addColumn(StudentModule::getUsername).setHeader("Username").setAutoWidth(true);
-        Grid.Column<StudentModule> nameColumn = grid.addColumn(StudentModule::getFullName).setHeader("Full Name").setAutoWidth(true);
-        Grid.Column<StudentModule> moduleColumn = grid.addColumn(StudentModule::getModuleId).setHeader("Module Selected").setAutoWidth(true);
-        Grid.Column<StudentModule> creditsColumn = grid.addColumn(StudentModule::getCredits).setHeader("Credits").setAutoWidth(true);
+        Grid.Column<StudentModule> usernameColumn = grid.addColumn(StudentModule::getUsername).setHeader("Username")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<StudentModule> nameColumn = grid.addColumn(StudentModule::getFullName).setHeader("Full Name")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<StudentModule> moduleColumn = grid.addColumn(StudentModule::getModuleId)
+                .setHeader("Module Selected").setAutoWidth(true).setSortable(true);
+        Grid.Column<StudentModule> creditsColumn = grid.addColumn(StudentModule::getCredits).setHeader("Credits")
+                .setAutoWidth(true).setSortable(true);
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {

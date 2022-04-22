@@ -60,9 +60,12 @@ public class ViewUsers extends Div {
         UserDAO userDao = new UserDAO();
         List<User> userList = userDao.getUserList(new User());
         grid.setItems(userList);
-        Grid.Column<User> userIDColumn = grid.addColumn(User::getUserID).setHeader("UserID").setAutoWidth(true);
-        Grid.Column<User> userNameColumn = grid.addColumn(User::getUsername).setHeader("Username").setAutoWidth(true);
-        Grid.Column<User> userTypeColumn = grid.addColumn(User::getType).setHeader("UserType").setAutoWidth(true);
+        Grid.Column<User> userIDColumn = grid.addColumn(User::getUserID).setHeader("UserID")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<User> userNameColumn = grid.addColumn(User::getUsername).setHeader("Username")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<User> userTypeColumn = grid.addColumn(User::getType).setHeader("UserType")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<User> editColumn = grid.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {

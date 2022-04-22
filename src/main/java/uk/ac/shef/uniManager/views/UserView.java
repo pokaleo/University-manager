@@ -33,9 +33,9 @@ public class UserView extends Div {
         SplitLayout splitLayout = new SplitLayout();
 
         grid.setItems(userList);
-        grid.addColumn(User::getUserID).setHeader("UserID").setAutoWidth(true);
-        grid.addColumn(User::getUsername).setHeader("Username").setAutoWidth(true);
-        grid.addColumn(User::getType).setHeader("UserType").setAutoWidth(true);
+        grid.addColumn(User::getUserID).setHeader("UserID").setAutoWidth(true).setSortable(true);
+        grid.addColumn(User::getUsername).setHeader("Username").setAutoWidth(true).setSortable(true);
+        grid.addColumn(User::getType).setHeader("UserType").setAutoWidth(true).setSortable(true);
         grid.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {

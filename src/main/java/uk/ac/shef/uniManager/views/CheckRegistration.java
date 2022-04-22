@@ -49,15 +49,24 @@ public class CheckRegistration extends Div {
         StudentDAO studentDAO = new StudentDAO();
         studentList = studentDAO.getStudentList(new Student());
         grid.setItems(studentList);
-        Grid.Column<Student> titleColumn = grid.addColumn(Student::getTitle).setHeader("Title").setAutoWidth(true);
-        Grid.Column<Student> userNameColumn = grid.addColumn(Student::getUsername).setHeader("Username").setAutoWidth(true);
-        Grid.Column<Student> ForenameColumn = grid.addColumn(Student::getForename).setHeader("Forename").setAutoWidth(true);
-        Grid.Column<Student> SurnameColumn = grid.addColumn(Student::getSurname).setHeader("Surname").setAutoWidth(true);
-        Grid.Column<Student> degreeColumn = grid.addColumn(Student::getRegDeg).setHeader("Degree").setAutoWidth(true);
-        Grid.Column<Student> emailColumn = grid.addColumn(Student::getEmail).setHeader("Email").setAutoWidth(true);
-        Grid.Column<Student> tutorColumn = grid.addColumn(Student::getTutor).setHeader("Tutor").setAutoWidth(true);
-        Grid.Column<Student> regNumberColumn = grid.addColumn(Student::getRegNumber).setHeader("Registration Number").setAutoWidth(true);
-        Grid.Column<Student> periodColumn = grid.addColumn(Student::getPeriodOfStudy).setHeader("Period of Study").setAutoWidth(true);
+        Grid.Column<Student> titleColumn = grid.addColumn(Student::getTitle).setHeader("Title")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> userNameColumn = grid.addColumn(Student::getUsername).setHeader("Username")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> ForenameColumn = grid.addColumn(Student::getForename).setHeader("Forename")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> SurnameColumn = grid.addColumn(Student::getSurname).setHeader("Surname")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> degreeColumn = grid.addColumn(Student::getRegDeg).setHeader("Degree")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> emailColumn = grid.addColumn(Student::getEmail).setHeader("Email")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> tutorColumn = grid.addColumn(Student::getTutor).setHeader("Tutor")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> regNumberColumn = grid.addColumn(Student::getRegNumber)
+                .setHeader("Registration Number").setAutoWidth(true).setSortable(true);
+        Grid.Column<Student> periodColumn = grid.addColumn(Student::getPeriodOfStudy)
+                .setHeader("Period of Study").setAutoWidth(true).setSortable(true);
 
         grid.setHeightFull();
 

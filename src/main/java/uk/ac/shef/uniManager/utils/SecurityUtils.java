@@ -44,14 +44,11 @@ public final class SecurityUtils {
                 userTypes.add(userType.toString());
             }
         }
-//        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)
-//                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-//        for (Object obj:
-//                authorities.toArray()) {
-//            System.out.println(obj.toString());
-//        }
-
         return userTypes.stream().findFirst().get();
+    }
+
+    public static String getUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     public static boolean isAccessGranted(Class<?> securedClass) {

@@ -57,9 +57,12 @@ public class ViewModules extends Div {
         ModuleDAO moduleDAO = new ModuleDAO();
         moduleList = moduleDAO.getModuleList(new Module());
         grid.setItems(moduleList);
-        Grid.Column<Module> moduleIDColumn = grid.addColumn(Module::getModuleId).setHeader("Module Code").setAutoWidth(true);
-        Grid.Column<Module> moduleNameColumn = grid.addColumn(Module::getModuleName).setHeader("Module Name").setAutoWidth(true);
-        Grid.Column<Module> taughtSemColumn = grid.addColumn(Module::getTaughtSem).setHeader("Taught Semester").setAutoWidth(true);
+        Grid.Column<Module> moduleIDColumn = grid.addColumn(Module::getModuleId).setHeader("Module Code")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Module> moduleNameColumn = grid.addColumn(Module::getModuleName).setHeader("Module Name")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Module> taughtSemColumn = grid.addColumn(Module::getTaughtSem).setHeader("Taught Semester")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<Module> editColumn = grid.addComponentColumn(module-> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {

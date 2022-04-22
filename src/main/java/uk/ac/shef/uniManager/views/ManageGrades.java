@@ -59,11 +59,16 @@ public class ManageGrades extends Div {
         GradesDAO gradesDAO = new GradesDAO();
         gradesList = gradesDAO.getGradesList(new Grades());
         grid.setItems(gradesList);
-        Grid.Column<Grades> usernameColumn = grid.addColumn(Grades::getUsername).setHeader("Username").setAutoWidth(true);
-        Grid.Column<Grades> moduleColumn = grid.addColumn(Grades::getModId).setHeader("Module").setAutoWidth(true);
-        Grid.Column<Grades> grade1Column = grid.addColumn(Grades::getGrades1).setHeader("1st Attempt").setAutoWidth(true);
-        Grid.Column<Grades> grade2Column = grid.addColumn(Grades::getGrades2).setHeader("Resit").setAutoWidth(true);
-        Grid.Column<Grades> levelColumn = grid.addColumn(Grades::getLevelOfStudy).setHeader("Level of Study").setAutoWidth(true);
+        Grid.Column<Grades> usernameColumn = grid.addColumn(Grades::getUsername).setHeader("Username")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Grades> moduleColumn = grid.addColumn(Grades::getModId).setHeader("Module")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Grades> grade1Column = grid.addColumn(Grades::getGrades1).setHeader("1st Attempt")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Grades> grade2Column = grid.addColumn(Grades::getGrades2).setHeader("Resit")
+                .setAutoWidth(true).setSortable(true);
+        Grid.Column<Grades> levelColumn = grid.addColumn(Grades::getLevelOfStudy).setHeader("Level of Study")
+                .setAutoWidth(true).setSortable(true);
         Grid.Column<Grades> editColumn = grid.addComponentColumn(grade -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener( e -> {

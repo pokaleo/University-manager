@@ -3,6 +3,7 @@ package uk.ac.shef.uniManager.DAO;
 
 
 import uk.ac.shef.uniManager.model.Grades;
+import uk.ac.shef.uniManager.model.Student;
 import uk.ac.shef.uniManager.utils.DbConn;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
@@ -17,30 +18,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class GradesDAO extends BaseDAO{
-
-    public JComboBox queryModule(String username){
-        JComboBox comboBox= new JComboBox();
-        DbConn dbConn = new DbConn();
-        Connection conn = dbConn.getCon();
-        try {
-            String sql = "SELECT module FROM grades WHERE username=?";
-            String module = null;
-            PreparedStatement ps2 = conn.prepareStatement(sql);
-            ps2.setString(1, username);
-            ResultSet rs = ps2.executeQuery();
-            while(rs.next()){
-
-                if ((rs.getString("module"))!=module){
-                    module = rs.getString("levelOfStudy");
-                    comboBox.addItem(String.valueOf(module));
-
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return comboBox;
-    }
 
     public boolean addGrade(Grades grades) {
         DbConn dbConn = new DbConn();
@@ -61,88 +38,27 @@ public class GradesDAO extends BaseDAO{
         return false;
     }
 
-    public boolean update1(Grades grades, String username, String module ){
-        String sql = "update grades set grades1 = ? , grades2= ? where username=? and module=?";
+    public ArrayList<String> queryLevels(String username){
+        String sql = "SELECT levelOfstudy FROM grades WHERE username=?";
+        int levelOfStudy = 0;
+        ArrayList<String> levels = new ArrayList<>();
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setInt(1, grades.getGrades1());
-            preparedStatement.setInt(2, grades.getGrades2());
-            preparedStatement.setString(3, username);
-            preparedStatement.setString(4, module);
-
-            if(preparedStatement.executeUpdate() > 0){
-                return true;
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    public boolean delete1(String username, String module){
-        String sql = "delete from grades where username=? and module=?";
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, module);
-            if(preparedStatement.executeUpdate() > 0){
-                return true;
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public DefaultTableModel query1(String username, String module){
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Module", "1st Attempt", "Resit", "levelOfStudy"},
-                0);
-
-        try {
-            PreparedStatement st = conn.prepareStatement("Select module, grades1, grades2, levelOfStudy from " +
-                    "grades where username=? and module=?");
-            st.setString(1, username);
-            st.setString(2, module);
-            ResultSet rs = st.executeQuery();
+            PreparedStatement ps2 = conn.prepareStatement(sql);
+            ps2.setString(1, username);
+            ResultSet rs = ps2.executeQuery();
             while(rs.next()){
-
-
-                String grades1 = (String.valueOf(rs.getInt("grades1")));
-                String grades2 = (String.valueOf(rs.getInt("grades2")));
-                String levelOfStudy = (rs.getString("levelOfStudy"));
-                model.addRow(new Object[]{ module,grades1, grades2,levelOfStudy});
+                if ((rs.getInt("levelOfStudy"))!=levelOfStudy && (rs.getInt("levelOfStudy"))!=0) {
+                    levelOfStudy = rs.getInt("levelOfStudy");
+                    levels.add(String.valueOf(levelOfStudy));
+                }
             }
-
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return model;
-    }
-
-    public DefaultTableModel query(String username){
-        DefaultTableModel model = new DefaultTableModel(new String[]{"Module", "1st Attempt", "Resit", "levelOfStudy"},
-                0);
-
-        try {
-            PreparedStatement st = conn.prepareStatement("Select module, grades1, grades2, levelOfStudy from " +
-                    "grades where username=?");
-            st.setString(1, username);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                Grades grade = new Grades();
-                String modId = (rs.getString("module"));
-                String grades1 = (String.valueOf(rs.getInt("grades1")));
-                String grades2 = (String.valueOf(rs.getInt("grades2")));
-                String levelOfStudy = (rs.getString("levelOfStudy"));
-                model.addRow(new Object[]{modId, grades1, grades2,levelOfStudy});
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return model;
+        return levels;
     }
 
     public JComboBox queryPeriods(String username){
@@ -154,12 +70,6 @@ public class GradesDAO extends BaseDAO{
             ps2.setString(1, username);
             ResultSet rs = ps2.executeQuery();
             while(rs.next()){
-                /*
-                System.out.println(levelOfStudy);
-                System.out.println(rs.getInt("levelOfStudy"));
-                Boolean b = rs.getInt("levelOfStudy")==levelOfStudy;
-                System.out.println(b);
-                */
                 if ((rs.getInt("levelOfStudy"))!=levelOfStudy){
                     levelOfStudy = rs.getInt("levelOfStudy");
                     comboBox.addItem(String.valueOf(levelOfStudy));
@@ -171,34 +81,9 @@ public class GradesDAO extends BaseDAO{
         return comboBox;
     }
 
-    public DefaultTableModel meanGrade(String username,int level){
-        DefaultTableModel model = new DefaultTableModel(new String[]{"ModuleId", "Best Attempt"},
-                0);
-        try {
-            int higerGrades = 0;
-            PreparedStatement st = conn.prepareStatement(
-                    "select grades1,grades2,module from grades where  username = ? and " +
-                            "levelOfStudy=?"
-            );
-            st.setString(1,username);
-            st.setInt(2,level);
-            ResultSet executeQuery = st.executeQuery();
-            while(executeQuery.next()){
-                if(executeQuery.getInt("grades1")>executeQuery.getInt("grades2")){
-                    higerGrades=executeQuery.getInt("grades1");
-                }else{
-                    higerGrades=executeQuery.getInt("grades2");
-                }
-                String moduleId = executeQuery.getString("module");
-                model.addRow(new Object[]{moduleId, higerGrades});
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return model;
-    }
-
     public double meanGrades(String username, int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         double meanGrades=0;
         try {
             double higerGrades = 0;
@@ -234,6 +119,7 @@ public class GradesDAO extends BaseDAO{
                     }
                 }
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -280,6 +166,8 @@ public class GradesDAO extends BaseDAO{
     }
 
     public List<Grades> getGradesList(Grades grades){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         List<Grades> retList = new ArrayList<Grades>();
         StringBuffer sqlString = new StringBuffer("select * from grades");
         if(!StringUtil.isEmpty(grades.getUsername())){
@@ -301,6 +189,39 @@ public class GradesDAO extends BaseDAO{
                 s.setLevelOfStudy(executeQuery.getString("levelOfStudy"));
                 retList.add(s);
             }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return retList;
+    }
+
+    public List<Grades> getMeanGradesList(String username, int level) {
+        List<Grades> retList = new ArrayList<Grades>();
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        try {
+            int higerGrades = 0;
+            PreparedStatement st = conn.prepareStatement(
+                    "select grades1, grades2, module from grades where  username = ? and " +
+                            "levelOfStudy=?"
+            );
+            st.setString(1,username);
+            st.setInt(2,level);
+            ResultSet executeQuery = st.executeQuery();
+            while(executeQuery.next()){
+                Grades s = new Grades();
+                if(executeQuery.getInt("grades1")>executeQuery.getInt("grades2")){
+                    higerGrades=executeQuery.getInt("grades1");
+                }else{
+                    higerGrades=executeQuery.getInt("grades2");
+                }
+                s.setGrades1ByStr(String.valueOf(higerGrades));
+                s.setUsername(username);
+                s.setModId(executeQuery.getString("module"));
+                retList.add(s);
+            }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -308,6 +229,8 @@ public class GradesDAO extends BaseDAO{
     }
 
     public boolean repeatYear(String username, int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         String sql = "update grades set grades1=0, grades2=0 where username=? and levelOfStudy=? and " +
                 "grades1<40 and grades2<40";
         String periodTemp = null;
@@ -327,7 +250,6 @@ public class GradesDAO extends BaseDAO{
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
                 periodTemp = (rs.getString("periodOfStudy"));
-                System.out.println(periodTemp);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -335,9 +257,7 @@ public class GradesDAO extends BaseDAO{
         String sql2 = "update students set periodOfStudy=? where username=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql2);
-            System.out.println(periodTemp);
             String period = "B" +periodTemp.substring(1,9);
-            System.out.println(period);
             preparedStatement.setString(1,period);
             preparedStatement.setString(2, username);
             if(preparedStatement.executeUpdate() > 0){
@@ -346,10 +266,17 @@ public class GradesDAO extends BaseDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     public boolean progress(String username, int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         String periodTemp = null;
         try {
             String sql3 = "select periodOfStudy from students where username=?";
@@ -358,7 +285,6 @@ public class GradesDAO extends BaseDAO{
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
                 periodTemp = (rs.getString("periodOfStudy"));
-                System.out.println(periodTemp);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -366,14 +292,12 @@ public class GradesDAO extends BaseDAO{
         String sql2 = "update students set periodOfStudy=? where username=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql2);
-            System.out.println(periodTemp);
             Calendar date = Calendar.getInstance();
             String yearString = String.valueOf(date.get(Calendar.YEAR));
-            yearString = yearString.substring(0,2);
+            yearString = yearString.substring(2,4);
             int year = Integer.parseInt(yearString);
-            String period = "A-"+year+"-"+String.valueOf((year++))+"-"+
+            String period = "A-"+year+"-"+String.valueOf((year+1))+"-"+
                     (Integer.parseInt(periodTemp.substring(8, 9))+1);
-            System.out.println(period);
             preparedStatement.setString(1,period);
             preparedStatement.setString(2, username);
             if(preparedStatement.executeUpdate() > 0){
@@ -382,11 +306,18 @@ public class GradesDAO extends BaseDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
 
     public int numberOfFails(String username,int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         int numberOfFails = 0;
         try {
             double higerGrades = 0;
@@ -409,6 +340,7 @@ public class GradesDAO extends BaseDAO{
                     numberOfFails++;
                 }
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -416,6 +348,8 @@ public class GradesDAO extends BaseDAO{
     }
 
     public boolean concededBoundaries(String username,int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         boolean boundaries = true;
         try {
             double higerGrades = 0;
@@ -431,18 +365,14 @@ public class GradesDAO extends BaseDAO{
                 }else{
                     higerGrades=executeQuery.getInt("grades2");
                 }
-                    //System.out.println(higerGrades);
-                    //System.out.println(level==4 && higerGrades<40);
                 if(level==4 && higerGrades<40){
-                    System.out.println(level==4 && higerGrades<40);
-                    System.out.println(higerGrades);
-                    System.out.println("test!!!!!!!!!!!");
                     return false;
                 }
                 if (level<4 && higerGrades<30){
                     return false;
                     }
                 }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -452,6 +382,8 @@ public class GradesDAO extends BaseDAO{
     public boolean failDissertation(String username,int level){
         boolean status = true;
         double meanGrades = 0.00;
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         try {
             double higerGrades = 0;
             PreparedStatement st = conn.prepareStatement(
@@ -480,6 +412,7 @@ public class GradesDAO extends BaseDAO{
                     }
                 }
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -487,8 +420,12 @@ public class GradesDAO extends BaseDAO{
     }
 
     public String outcome(String username, int level){
+        DbConn dbConn = new DbConn();
+        Connection conn  = dbConn.getCon();
         String periodTemp = null;
         String outcome =null;
+        ModuleDAO moduleDAO = new ModuleDAO();
+        StudentDAO studentDAO = new StudentDAO();
         /* QUERY FOR CURRENT LEVE！！！！！！！！！！！
         try {
             String sql3 = "select periodOfStudy from students where username=?";
@@ -517,9 +454,21 @@ public class GradesDAO extends BaseDAO{
             }
         }else if (period<3 && meanGrades(username,period)<40){
             outcome="fail";
-        }else if(period==3 && meanGrades(username,period)>=40 ){
+        }else if(period==3 && meanGrades(username,period)>=40 && moduleDAO.oneYearMaster(studentDAO.query(username).
+                getRegDeg())){
+            if(numberOfFails(username,period)<1){
+                outcome ="pass";
+            }
+            if(numberOfFails(username,period)==1 && concededBoundaries(username,period)){
+                outcome ="conceded pass";
+            }
+            if(numberOfFails(username,period)>1 || concededBoundaries(username,period)==false){
+                outcome="fail";
+            }
+        } else if(period==3 && meanGrades(username,period)>=40 && !moduleDAO.oneYearMaster(studentDAO.query(username).
+                getRegDeg())){
             if(numberOfFails(username,period)<1&&failDissertation(username,level)){
-                outcome ="Bc Graduate with ";
+                outcome ="Bachelor graduate with " + graduate(username, level);
             }
             if(numberOfFails(username,period)==1 && concededBoundaries(username,period)&&
                     failDissertation(username,level)){
@@ -533,11 +482,10 @@ public class GradesDAO extends BaseDAO{
             outcome="fail";
         }else if(period==4 && meanGrades(username,period)>=50 ){
             if(numberOfFails(username,period)<1&&failDissertation(username,level)){
-                outcome ="Msc Graduate with ";
+                outcome ="Master graduate with " + graduate(username, level);
             }
             if(numberOfFails(username,period)==1 && concededBoundaries(username,period)&&
                     failDissertation(username,level)){
-                System.out.println(period);
                 outcome="conceded pass";
             }
             if(numberOfFails(username,period)>1 || concededBoundaries(username,period)==false ||
@@ -547,10 +495,17 @@ public class GradesDAO extends BaseDAO{
         } else if(period==4 && meanGrades(username,period)<50 ){
             outcome="fail";
         }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return outcome;
     }
 
     public String graduate(String username, int level){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         String graduate = null;
         String degree = null;
         double mean = 0;
@@ -579,7 +534,6 @@ public class GradesDAO extends BaseDAO{
             e.printStackTrace();
         }
         String period = "C"+periodtemp.substring(1,9);
-        System.out.println(period);
 
         try {
             String sql = "update students set periodOfStudy=? where username=?";
@@ -602,8 +556,7 @@ public class GradesDAO extends BaseDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(degName.substring(0,3));
-        if(degName.substring(0,3).equals("MSc")){
+        if(degName.substring(0,1).equals("M")){
             if (meanGrades(username,level)<49.5){
                 graduate="fail";
             }else if((meanGrades(username,4)>=49.5&&(meanGrades(username,level)<59.5))){
@@ -649,6 +602,11 @@ public class GradesDAO extends BaseDAO{
                     meanGrades(username,4)*2)  >= 69.5 ){
                 graduate="first class";
             }
+        }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return graduate;

@@ -14,6 +14,8 @@ public class StudentDAO extends BaseDAO{
 
 
     public Student query(String username){
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
         Student studentRst = null;
         try {
             PreparedStatement st = conn.prepareStatement("Select * from students where username=?");
@@ -28,6 +30,7 @@ public class StudentDAO extends BaseDAO{
             studentRst.setTutor(executeQuery.getString("tutor"));
             studentRst.setPeriodOfStudy(executeQuery.getString("periodOfStudy"));
         }
+        conn.close();
     } catch (SQLException e) {
         e.printStackTrace();
     }

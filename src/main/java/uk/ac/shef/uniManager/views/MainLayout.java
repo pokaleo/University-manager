@@ -137,6 +137,8 @@ public class MainLayout extends AppLayout {
             if ("ROLE_teacher".equals(userType)) {
                 return new MenuItemInfo[]{
                         new MenuItemInfo("Manage Grades", "grades.svg", ManageGrades.class),
+
+                        new MenuItemInfo("Weighted grades & Progress", "mods.svg", MeanGrades.class),
                 };
             }
         }

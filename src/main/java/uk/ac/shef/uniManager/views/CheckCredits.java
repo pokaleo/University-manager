@@ -126,7 +126,7 @@ public class CheckCredits extends Div {
         notification1.setPosition(Notification.Position.BOTTOM_CENTER);
         if (checker){
             Notification notification = Notification.show("The student are in level " + level + " and the credits sum is valid.");
-            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             notification.setDuration(50000);
             notification.setPosition(Notification.Position.BOTTOM_CENTER);
         }else {

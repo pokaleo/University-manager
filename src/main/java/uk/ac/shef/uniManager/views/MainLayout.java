@@ -138,7 +138,9 @@ public class MainLayout extends AppLayout {
                 return new MenuItemInfo[]{
                         new MenuItemInfo("Manage Grades", "grades.svg", ManageGrades.class),
 
-                        new MenuItemInfo("Weighted grades & Progress", "mods.svg", MeanGrades.class),
+                        new MenuItemInfo("Weighted Grades & Progress", "mods.svg", MeanGrades.class),
+
+                        new MenuItemInfo("Students' Outcome & Status", "students.svg", CheckStudents.class),
                 };
             }
         }

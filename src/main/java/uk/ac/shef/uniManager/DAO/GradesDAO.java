@@ -196,6 +196,31 @@ public class GradesDAO extends BaseDAO{
         return retList;
     }
 
+    public List<Grades> getStudentGradesList(String username) {
+        List<Grades> retList = new ArrayList<Grades>();
+        DbConn dbConn = new DbConn();
+        Connection conn = dbConn.getCon();
+        try {
+            PreparedStatement st = conn.prepareStatement(
+                    "select grades1, grades2, module, levelOfStudy from grades where  username = ?"
+            );
+            st.setString(1,username);
+            ResultSet executeQuery = st.executeQuery();
+            while(executeQuery.next()){
+                Grades s = new Grades();
+                s.setModId(executeQuery.getString("module"));
+                s.setGrades1(executeQuery.getInt("grades1"));
+                s.setGrades1(executeQuery.getInt("grades2"));
+                s.setLevelOfStudy(executeQuery.getString("levelOfStudy"));
+                retList.add(s);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return retList;
+    }
+
     public List<Grades> getMeanGradesList(String username, int level) {
         List<Grades> retList = new ArrayList<Grades>();
         DbConn dbConn = new DbConn();

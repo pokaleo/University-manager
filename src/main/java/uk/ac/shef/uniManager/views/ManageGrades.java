@@ -41,7 +41,7 @@ public class ManageGrades extends Div {
     private Editor<Grades> editor = grid.getEditor();
     private Button saveButton = new Button("Save");
     private Button deleteButton = new Button("Delete");
-    private SplitLayout splitLayout = new SplitLayout();
+    private SplitLayout splitLayout;
     private TextField grades1 = new TextField();
     private TextField grades2 = new TextField();
     private ComboBox<String> studentUsername;

@@ -1,23 +1,17 @@
 package uk.ac.shef.uniManager.views;
 
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import uk.ac.shef.uniManager.DAO.GradesDAO;
-import uk.ac.shef.uniManager.DAO.StudentDAO;
 import uk.ac.shef.uniManager.model.Grades;
-import uk.ac.shef.uniManager.model.Student;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
 
 import javax.annotation.security.RolesAllowed;

@@ -6,12 +6,9 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
-import org.springframework.core.io.ResourceLoader;
 import uk.ac.shef.uniManager.utils.SecurityService;
 import uk.ac.shef.uniManager.utils.SecurityUtils;
 
@@ -120,7 +117,6 @@ public class MainLayout extends AppLayout {
 
                         new MenuItemInfo("Manage Modules", "mods.svg", ViewModules.class),
 
-                        new MenuItemInfo("About", "mods.svg", Login2.class),
                 };
             }
             if ("ROLE_registrar".equals(userType)) {

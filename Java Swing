@@ -1,0 +1,19 @@
+Java Swing
+admin: test
+registrar: test2
+teacher: teacher
+student: student2
+
+Web application
+admin: test1
+registrar: 66666
+teacher: teacher2
+student: alan
+
+Operations of the system:
+admin: manage user account, manage department, manage degree, manage modules
+registrar: manage students(register students, link to a degree), manage students modules
+, check students registration and chosen modules
+teacher: manage grades, calculate the results, progess students, check result
+student: check status * result
+

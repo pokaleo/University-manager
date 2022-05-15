@@ -21,7 +21,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import uk.ac.shef.uniManager.DAO.GradesDAO;
 import uk.ac.shef.uniManager.DAO.StudentDAO;
 import uk.ac.shef.uniManager.model.Grades;
@@ -29,7 +28,6 @@ import uk.ac.shef.uniManager.model.Student;
 import uk.ac.shef.uniManager.utils.StringUtil;
 
 import javax.annotation.security.RolesAllowed;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
